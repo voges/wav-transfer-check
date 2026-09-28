@@ -7,7 +7,6 @@ Verify WAV files after transfer.
 Install [Homebrew](https://brew.sh), then run:
 
 ```bash
-chmod +x *.sh
 ./install_ffmpeg.sh
 ```
 
