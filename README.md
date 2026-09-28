@@ -1,31 +1,32 @@
 # wav-transfer-check
 
-Verify WAV files after transfer.
+Check WAV files for decoding errors and verify they are unchanged after transfer.
 
-## Setup
+## Requirements
 
-Install [Homebrew](https://brew.sh), then run:
+Bash, FFmpeg, and `shasum` or `sha256sum` are required. On macOS, install FFmpeg with Homebrew:
 
 ```bash
 ./install_ffmpeg.sh
 ```
 
-## Use
+On Linux, install FFmpeg with your distribution's package manager.
 
-On the sender, run these commands:
+## Transfer
+
+On the sender, run:
 
 ```bash
 ./wavcheck.sh /path/to/folder
 ./wavhash.sh create /path/to/folder
 ```
 
-`create` stores the SHA-256 sums in `checksums.sha256` inside that folder.
+`wavcheck` recursively decodes WAV files. `create` records their SHA-256 checksums in `checksums.sha256` at the folder root.
 
-Send the folder to the receiver (e.g., via iCloud Drive).
-Then run this command.
+Transfer the folder, including the manifest. On the receiver, run:
 
 ```bash
 ./wavhash.sh verify /path/to/folder
 ```
 
-All scripts recurse into subfolders.
+`verify` recursively checks that every WAV file matches its recorded bytes.

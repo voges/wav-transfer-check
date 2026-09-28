@@ -4,10 +4,12 @@
 set -u
 dir="${1:-.}"
 
+[[ -d "$dir" ]] || { echo "Folder not found: $dir" >&2; exit 1; }
 command -v ffmpeg >/dev/null || { echo "ffmpeg not found - run ./install_ffmpeg.sh"; exit 1; }
 
-ok=0; bad=0
+ok=0; bad=0; files=0
 while IFS= read -r -d '' f; do
+  files=$((files + 1))
   if [[ ! -s "$f" ]]; then
     echo "EMPTY   $f"; ((bad++)); continue
   fi
@@ -20,6 +22,11 @@ while IFS= read -r -d '' f; do
     ((ok++))
   fi
 done < <(find "$dir" -type f -iname '*.wav' -print0)
+
+if [[ $files -eq 0 ]]; then
+  echo "No WAV files found: $dir" >&2
+  exit 1
+fi
 
 echo "OK: $ok   Failed: $bad"
 [[ $bad -eq 0 ]]
