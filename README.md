@@ -1,32 +1,34 @@
-# wav-transfer-check
+# WAV Transfer Check
 
-Check WAV files for decoding errors and verify they are unchanged after transfer.
+Check WAV files before sending them and confirm they are unchanged after transfer.
 
-## Requirements
+## Setup
 
-Bash, FFmpeg, and `shasum` or `sha256sum` are required. On macOS, install FFmpeg with Homebrew:
+On macOS, run this to install or update FFmpeg:
 
 ```bash
 ./install_ffmpeg.sh
 ```
 
-On Linux, install FFmpeg with your distribution's package manager.
+Homebrew must be installed first. If needed, get it from [brew.sh](https://brew.sh).
 
-## Transfer
+On Linux, install FFmpeg using your usual software installer. Run the commands below from the folder containing these scripts, replacing the example path with your WAV folder.
 
-On the sender, run:
+## Before Sending
 
-```bash
-./wavcheck.sh /path/to/folder
-./wavhash.sh create /path/to/folder
-```
-
-`wavcheck` recursively decodes WAV files. `create` records their SHA-256 checksums in `checksums.sha256` at the folder root.
-
-Transfer the folder, including the manifest. On the receiver, run:
+Run these commands on the computer that has the original WAV files:
 
 ```bash
-./wavhash.sh verify /path/to/folder
+./wavcheck.sh "/path/to/your/folder"
+./wavhash.sh create "/path/to/your/folder"
 ```
 
-`verify` recursively checks that every WAV file matches its recorded bytes.
+Continue only if the first command reports `Failed: 0`. The second command creates `checksums.sha256` inside your WAV folder.
+
+Copy the WAV folder, including `checksums.sha256`, to the receiving computer. Then run:
+
+```bash
+./wavhash.sh verify "/path/to/your/folder"
+```
+
+`All N files OK` means the WAV files match the originals. A verification failure means files are missing or have changed.
