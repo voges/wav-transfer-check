@@ -25,5 +25,5 @@ fi
 
 # Check
 echo
-ffmpeg -version | head -n 1
+ffmpeg -version | sed -n '1p'
 echo "Done. Ensure Homebrew is initialized in new terminals so ffmpeg is on PATH."
